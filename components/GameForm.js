@@ -23,7 +23,7 @@ class GameForm extends Component {
 
     handleCreate() {
         if (this.state.name) {
-            // TODO - move to code screen
+            this.props.onCreate(this.state.name)
         } else {
             this.setState({ nameError: true });
         }
@@ -31,7 +31,7 @@ class GameForm extends Component {
 
     handleJoin() {
         if (this.state.name && this.state.code) {
-            // TODO - move to start screen
+            this.props.onJoin(this.state.name, this.state.code);
         } else if (this.state.name && !this.state.code) {
             this.setState({ codeError: true });
         } else if (!this.state.name && this.state.code) {

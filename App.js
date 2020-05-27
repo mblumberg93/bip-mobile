@@ -4,7 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PubNub from "pubnub";
 import { PubNubProvider } from "pubnub-react";
 import { PUBNUB_PUBLISH_KEY, PUBNUB_SUBSCRIBE_KEY } from './secrets';
-import { WelcomeScreen } from './views/WelcomeScreen'
+import { WelcomeScreen } from './views/WelcomeScreen';
+import { CreatorScreen } from './views/CreatorScreen';
 
 const Stack = createStackNavigator();
 const pubnub = new PubNub({
@@ -28,6 +29,9 @@ class App extends Component {
             <Stack.Screen name="Welcome" 
                           component={WelcomeScreen} 
                           options={{ title: 'Welcome To BIP' }} />
+            <Stack.Screen name="Creator" 
+                          component={CreatorScreen} 
+                          options={{ title: 'Game Code' }} />
           </Stack.Navigator>
         </PubNubProvider>
       </NavigationContainer>
