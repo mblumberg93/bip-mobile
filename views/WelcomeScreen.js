@@ -8,7 +8,8 @@ export const WelcomeScreen = ({ navigation }) => {
     }
 
     const handleJoin = (name, code) => {
-        console.log(name + "," + code);
+        const gameChannel = "game-" + code;
+        navigation.navigate("Start", { name: name, gameChannel: gameChannel, isJoiner: true });
     }
 
     return (

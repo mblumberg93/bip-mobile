@@ -6,6 +6,7 @@ import { PubNubProvider } from "pubnub-react";
 import { PUBNUB_PUBLISH_KEY, PUBNUB_SUBSCRIBE_KEY } from './secrets';
 import { WelcomeScreen } from './views/WelcomeScreen';
 import { CreatorScreen } from './views/CreatorScreen';
+import { StartScreen } from './views/StartScreen';
 
 const Stack = createStackNavigator();
 const pubnub = new PubNub({
@@ -32,6 +33,9 @@ class App extends Component {
             <Stack.Screen name="Creator" 
                           component={CreatorScreen} 
                           options={{ title: 'Game Code' }} />
+            <Stack.Screen name="Start"
+                          component={StartScreen} 
+                          options={{ title: 'Choose Start' }} />
           </Stack.Navigator>
         </PubNubProvider>
       </NavigationContainer>
