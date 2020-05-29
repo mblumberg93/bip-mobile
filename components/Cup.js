@@ -1,28 +1,45 @@
 import React, { Component } from 'react';
 import { StyleSheet, Image, TouchableOpacity } from "react-native";
+import { connect } from "react-redux";
+import { makeMove } from "../actions/index";
 
-class Cup extends Component {
+function mapDispatchToProps(dispatch) {
+    return {
+        makeMove: move => dispatch(makeMove(move))
+    };
+}
+
+function mapStateToProps(state) {
+    return state ;
+};
+
+class ConnectedCup extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            active: true
-        }
     }
     
     toggleCup() {
-        this.setState({ active: !this.state.active })
+        if (this.props.player === this.props.name) {
+            this.props.makeMove({ player: this.props.name, row: this.props.row, column: this.props.column });
+            this.props.onUpdateCups(this.props.row, this.props.column);
+        }
     }
 
     render() {
+        const source = !this.props.active ? require('../assets/circle_PNG6.png') : this.props.player === this.props.name ? 
+            require('../assets/circle_PNG3.png') : require('../assets/circle_PNG4.png')
         return (
-            <TouchableOpacity style={styles.cupContainer} onPress={() => this.toggleCup()}>
-                <Image style={styles.cup} 
-                        source={this.state.active ? require('../assets/circle_PNG3.png') : require('../assets/circle_PNG6.png')}>
+            <TouchableOpacity style={styles.cupContainer}
+                              onPress={() => this.toggleCup()}
+                              disabled={this.props.player !== this.props.name}>
+                <Image style={styles.cup} source={source}>
                 </Image>
             </TouchableOpacity>
         );
     }
 }
+
+const Cup = connect(mapStateToProps, mapDispatchToProps)(ConnectedCup);
 
 export default Cup;
 

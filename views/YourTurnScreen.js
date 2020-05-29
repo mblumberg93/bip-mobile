@@ -8,7 +8,7 @@ export const YourTurnScreen = ({ navigation }) => {
     
     return (
         <SafeAreaView>
-            <YourRack></YourRack>
+            <YourRack pubnub={pubnub}></YourRack>
         </SafeAreaView>
     );
 };

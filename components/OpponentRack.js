@@ -1,15 +1,22 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from "react-native";
 import { connect } from "react-redux";
+import { makeMove } from "../actions/index";
 import Square from '../components/Square';
 import { GameEvents } from '../constants';
 const { vw } = require('react-native-expo-viewport-units');
+
+function mapDispatchToProps(dispatch) {
+    return {
+        makeMove: move => dispatch(makeMove(move))
+    };
+}
 
 function mapStateToProps(state) {
     return state ;
 };
 
-class ConnectedYourRack extends Component {
+class ConnectedOpponentRack extends Component {
     constructor(props) {
         super(props);
     }
@@ -17,6 +24,18 @@ class ConnectedYourRack extends Component {
     componentDidMount() {
         if (this.props.pubnub) {
             this.props.pubnub.setUUID(this.props.UUID);
+            const listener = {
+                message: envelope => {
+                  if (envelope.message.content.event == GameEvents.MakeMove) {
+                    if (envelope.message.content.player !== this.props.player) {
+                        this.props.makeMove({ player: envelope.message.content.player, row: envelope.message.content.row, 
+                            column: envelope.message.content.column});
+                    }
+                  }
+                }
+              };
+        
+              this.props.pubnub.addListener(listener);
             this.props.pubnub.subscribe({ channels: [this.props.gameChannel] });
         }
     }
@@ -28,7 +47,7 @@ class ConnectedYourRack extends Component {
     }
 
     getCup(row, column) {
-        for (const cup of this.props.cups) {
+        for (const cup of this.props.opponentCups) {
             if (cup.row === row && cup.column === column) {
                 return cup;
             }
@@ -36,27 +55,15 @@ class ConnectedYourRack extends Component {
         return null;
     }
 
-    handleUpdateCups(row, column) {
-        const message = {
-            content: {
-                event: GameEvents.MakeMove,
-                player: this.props.name,
-                row: row,
-                column: column
-            },
-            id: Math.random().toString(16).substr(2)
-          };
-        
-          this.props.pubnub.publish({ channel: this.props.gameChannel, message });
-    }
-
     render() {
         const size = [...Array(7).keys()];
-        const squares = size.map(row => {
-            return size.map(column => {
+        const squares = size.map(invRow => {
+            return size.map(invColumn => {
+                const row = 6 - invRow;
+                const column = 6 - invColumn;
                 const cup = this.getCup(row, column);
                 return <Square key={"square"+row+column} 
-                               player={this.props.name}
+                               player={this.props.opponentName}
                                row={row} 
                                column={column}
                                hasCup={cup !== null}
@@ -75,16 +82,16 @@ class ConnectedYourRack extends Component {
     }
 }
 
-const YourRack = connect(mapStateToProps)(ConnectedYourRack);
+const OpponentRack = connect(mapStateToProps, mapDispatchToProps)(ConnectedOpponentRack);
 
-export default YourRack;
+export default OpponentRack;
 
 const styles = StyleSheet.create({
     screenContainer: {
         paddingTop: vw(10),
-        paddingBottom: vw(10),
         paddingLeft: 15,
         paddingRight: 15,
+        paddingBottom: vw(10),
         justifyContent: "center",
         alignItems: 'center'
     },

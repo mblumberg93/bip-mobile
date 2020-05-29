@@ -35,10 +35,9 @@ class ConnectedChooseStart extends Component {
                     }
                     if (envelope.message.content.event == GameEvents.GameStart) {
                         if (envelope.message.content.player == this.props.name) {
-                            this.props.updateGame({isTurn: true});
                             this.props.onYouStart();
                         } else {
-                            this.props.updateGame({isTurn: false});
+
                             this.props.onOpponentStart();
                         }             
                     }
@@ -68,7 +67,6 @@ class ConnectedChooseStart extends Component {
     }
 
     handleYouStart() {
-        this.props.updateGame({isTurn: true});
         this.props.onYouStart();
         const message = {
             content: {
@@ -81,7 +79,6 @@ class ConnectedChooseStart extends Component {
     }
 
     handleOpponentStart() {
-        this.props.updateGame({isTurn: false});
         this.props.onOpponentStart();
         const message = {
             content: {
