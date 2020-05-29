@@ -16,10 +16,8 @@ function rootReducer(state = initialState, action) {
     return Object.assign({}, state, action.payload);
   }
   if (action.type === 'MAKE_MOVE') {
-    console.log(action);
     const cups = action.payload.player === state.name ? [...state.cups] : [...state.opponentCups];
     const updatedCups = updateCups(cups, action.payload.row, action.payload.column);
-    console.log(updatedCups);
     if (action.payload.player === state.name) {
       return Object.assign({}, state, { cups: updatedCups} );
     } else {
