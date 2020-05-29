@@ -4,12 +4,11 @@ import GameForm from '../components/GameForm';
 
 export const WelcomeScreen = ({ navigation }) => {
     const handleCreate = (name) => {
-        navigation.navigate("Creator", { name: name });
+        navigation.navigate("Creator", {});
     }
 
-    const handleJoin = (name, code) => {
-        const gameChannel = "game-" + code;
-        navigation.navigate("Start", { name: name, gameChannel: gameChannel, isJoiner: true });
+    const handleJoin = (name, gameChannel) => {
+        navigation.navigate("Start", { isJoiner: true });
     }
 
     return (

@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
 import { Input, Button, Divider } from 'react-native-elements'
 import { View, StyleSheet, Text } from "react-native";
+import { connect } from "react-redux";
+import { updateGame } from "../actions/index";
 
-class GameForm extends Component {
+function mapDispatchToProps(dispatch) {
+    return {
+        updateGame: updates => dispatch(updateGame(updates))
+    };
+}
+
+class ConnectedGameForm extends Component {
     constructor(props) {
         super(props)
         this.state = { 
@@ -23,7 +31,11 @@ class GameForm extends Component {
 
     handleCreate() {
         if (this.state.name) {
-            this.props.onCreate(this.state.name)
+            const code = this.generateCode();
+            const gameChannel = "game-" + code;
+            const UUID = name + "-" + gameChannel;
+            this.props.updateGame({ name: this.state.name, code: code, gameChannel: gameChannel, UUID: UUID });
+            this.props.onCreate(this.state.name);
         } else {
             this.setState({ nameError: true });
         }
@@ -31,7 +43,10 @@ class GameForm extends Component {
 
     handleJoin() {
         if (this.state.name && this.state.code) {
-            this.props.onJoin(this.state.name, this.state.code);
+            const gameChannel = "game-" + this.state.code;
+            const UUID = name + "-" + gameChannel;
+            this.props.updateGame({ name: this.state.name, code: this.state.code, gameChannel: gameChannel, UUID: UUID });
+            this.props.onJoin(this.state.name, gameChannel);
         } else if (this.state.name && !this.state.code) {
             this.setState({ codeError: true });
         } else if (!this.state.name && this.state.code) {
@@ -39,6 +54,16 @@ class GameForm extends Component {
         } else {
             this.setState({ nameError: true, codeError: true })
         }
+    }
+
+    generateCode() {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < 6; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
     }
 
     render() {
@@ -71,6 +96,8 @@ class GameForm extends Component {
         )
     }
 };
+
+const GameForm = connect(null,mapDispatchToProps)(ConnectedGameForm);
 
 export default GameForm;
 

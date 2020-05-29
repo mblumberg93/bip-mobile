@@ -7,6 +7,13 @@ import { PUBNUB_PUBLISH_KEY, PUBNUB_SUBSCRIBE_KEY } from './secrets';
 import { WelcomeScreen } from './views/WelcomeScreen';
 import { CreatorScreen } from './views/CreatorScreen';
 import { StartScreen } from './views/StartScreen';
+import { createStore, applyMiddleware } from 'redux'
+import { Provider } from 'react-redux'
+import thunk from 'redux-thunk'
+import { composeWithDevTools } from 'redux-devtools-extension'
+import rootReducer from './reducers'
+
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
 const Stack = createStackNavigator();
 const pubnub = new PubNub({
@@ -17,28 +24,27 @@ const pubnub = new PubNub({
 class App extends Component {
   constructor(props) {  
     super(props);
-    this.state = {
-      //TODO
-    };
   }
   
   render() {
     return (
-      <NavigationContainer>
-        <PubNubProvider client={pubnub}>
-          <Stack.Navigator initialRouteName="Welcome">
-            <Stack.Screen name="Welcome" 
-                          component={WelcomeScreen} 
-                          options={{ title: 'Welcome To BIP' }} />
-            <Stack.Screen name="Creator" 
-                          component={CreatorScreen} 
-                          options={{ title: 'Game Code' }} />
-            <Stack.Screen name="Start"
-                          component={StartScreen} 
-                          options={{ title: 'Choose Start' }} />
-          </Stack.Navigator>
-        </PubNubProvider>
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <PubNubProvider client={pubnub}>
+            <Stack.Navigator initialRouteName="Welcome">
+              <Stack.Screen name="Welcome" 
+                            component={WelcomeScreen} 
+                            options={{ title: 'Welcome To BIP' }} />
+              <Stack.Screen name="Creator" 
+                            component={CreatorScreen} 
+                            options={{ title: 'Game Code' }} />
+              <Stack.Screen name="Start"
+                            component={StartScreen} 
+                            options={{ title: 'Choose Start' }} />
+            </Stack.Navigator>
+          </PubNubProvider>
+        </NavigationContainer>
+      </Provider>
     );
   }
 }
