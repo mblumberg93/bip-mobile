@@ -1,9 +1,14 @@
+import { STANDARD } from '../formations';
+
 export const initialState = {
   name: '',
   opponentName: '',
   gameChannel: '',
   UUID: '',
-  code: ''
+  code: '',
+  isTurn: false,
+  cups: STANDARD.cups,
+  opponentCups: STANDARD.cups
 }
 
 function rootReducer(state = initialState, action) {

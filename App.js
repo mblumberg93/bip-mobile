@@ -7,6 +7,8 @@ import { PUBNUB_PUBLISH_KEY, PUBNUB_SUBSCRIBE_KEY } from './secrets';
 import { WelcomeScreen } from './views/WelcomeScreen';
 import { CreatorScreen } from './views/CreatorScreen';
 import { StartScreen } from './views/StartScreen';
+import { YourTurnScreen } from './views/YourTurnScreen';
+import { OpponentsTurnScreen } from './views/OpponentsTurnScreen';
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
@@ -41,6 +43,12 @@ class App extends Component {
               <Stack.Screen name="Start"
                             component={StartScreen} 
                             options={{ title: 'Choose Start' }} />
+              <Stack.Screen name="Your Turn"
+                            component={YourTurnScreen} 
+                            options={{ title: 'Your Turn' }} />
+              <Stack.Screen name="Opponents Turn"
+                            component={OpponentsTurnScreen} 
+                            options={{ title: "Opponent's Turn" }} />
             </Stack.Navigator>
           </PubNubProvider>
         </NavigationContainer>

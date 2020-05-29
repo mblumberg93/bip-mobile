@@ -33,7 +33,7 @@ class ConnectedGameForm extends Component {
         if (this.state.name) {
             const code = this.generateCode();
             const gameChannel = "game-" + code;
-            const UUID = name + "-" + gameChannel;
+            const UUID = this.state.name + "-" + gameChannel;
             this.props.updateGame({ name: this.state.name, code: code, gameChannel: gameChannel, UUID: UUID });
             this.props.onCreate(this.state.name);
         } else {
@@ -44,7 +44,7 @@ class ConnectedGameForm extends Component {
     handleJoin() {
         if (this.state.name && this.state.code) {
             const gameChannel = "game-" + this.state.code;
-            const UUID = name + "-" + gameChannel;
+            const UUID = this.state.name + "-" + gameChannel;
             this.props.updateGame({ name: this.state.name, code: this.state.code, gameChannel: gameChannel, UUID: UUID });
             this.props.onJoin(this.state.name, gameChannel);
         } else if (this.state.name && !this.state.code) {
