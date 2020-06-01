@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text } from "react-native";
-import { Button } from 'react-native-elements'
+import { Button } from 'react-native-elements';
 import { connect } from "react-redux";
 import { updateGame } from "../actions/index";
 import { GameEvents } from '../constants';
@@ -102,11 +102,11 @@ class ConnectedChooseStart extends Component {
                         <Text style={styles.standardText}>Your opponent is {this.props.opponentName}</Text>
                         <Text style={styles.standardText}>Choose who starts</Text>
                         <Button title={this.props.name + " Starts"} 
-                                buttonStyle={styles.button}
+                                buttonStyle={{ marginBottom: 15 }}
                                 onPress={() => this.handleYouStart()}>
                         </Button>
                         <Button title={this.props.opponentName + " Starts"} 
-                                buttonStyle={styles.button}
+                                buttonStyle={{ marginBottom: 15 }}
                                 onPress={() => this.handleOpponentStart()}>
                         </Button>
                     </View>
@@ -132,8 +132,5 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         fontSize: 20,
         fontWeight: "bold"
-    },
-    button: {
-        marginBottom: 15,
     }
 });

@@ -26,12 +26,20 @@ class ConnectedOpponentRack extends Component {
             this.props.pubnub.setUUID(this.props.UUID);
             const listener = {
                 message: envelope => {
-                  if (envelope.message.content.event == GameEvents.MakeMove) {
-                    if (envelope.message.content.player !== this.props.player) {
-                        this.props.makeMove({ player: envelope.message.content.player, row: envelope.message.content.row, 
-                            column: envelope.message.content.column});
+                    if (envelope.message.content.player === this.props.name) {
+                        return;
                     }
-                  }
+                    if (envelope.message.content.event === GameEvents.MakeMove) {
+                        const move = { 
+                            player: envelope.message.content.player, 
+                            row: envelope.message.content.row, 
+                            column: envelope.message.content.column
+                        }
+                        this.props.makeMove(move);
+                    }
+                    if (envelope.message.content.event === GameEvents.EndTurn) {
+                        this.props.onStartTurn();
+                    }
                 }
               };
         

@@ -26,8 +26,8 @@ class ConnectedCup extends Component {
     }
 
     render() {
-        const source = !this.props.active ? require('../assets/circle_PNG6.png') : this.props.player === this.props.name ? 
-            require('../assets/circle_PNG3.png') : require('../assets/circle_PNG4.png')
+        const source = !this.props.active ? require('../assets/circle_PNG63.png') : this.props.player === this.props.name ? 
+            require('../assets/circle_PNG28.png') : require('../assets/circle_PNG47.png')
         return (
             <TouchableOpacity style={styles.cupContainer}
                               onPress={() => this.toggleCup()}

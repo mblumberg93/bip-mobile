@@ -72,24 +72,26 @@ class ConnectedGameForm extends Component {
                 <Text style={styles.header}>Step 1: Enter Team Name</Text>
                 <Input label="Team Name" 
                        onChangeText={(e) => this.handleNameChange(e)}
-                       containerStyle={styles.input}
+                       containerStyle={{ marginBottom: 20 }}
                        errorMessage={this.state.nameError ? "Team Name is required" : null }
                        renderErrorMessage={this.state.nameError}>
                 </Input>
-                <Text style={styles.header}>Step 2: Create A Game or Join A Game</Text>
+                <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 30, marginTop: 10}}>
+                    Step 2: Create A Game or Join A Game
+                </Text>
                 <Button title="Create" 
-                        buttonStyle={styles.button}
+                        buttonStyle={{ marginBottom: 15 }}
                         onPress={() => this.handleCreate()}>
                 </Button>
-                <Divider style={styles.divider} />
+                <Divider style={{ marginTop: 30, marginBottom: 30 }} />
                 <Input label="Game Code" 
                        onChangeText={(e) => this.handleCodeChange(e)}
-                       containerStyle={styles.input}
+                       containerStyle={{ marginBottom: 20 }}
                        errorMessage={this.state.codeError ? "Game Code is required to join game" : null }
                        renderErrorMessage={this.state.codeError}>
                 </Input>
                 <Button title="Join" 
-                        buttonStyle={styles.button}
+                        buttonStyle={{ marginBottom: 15 }}
                         onPress={() => this.handleJoin()}>
                 </Button>
             </View>
@@ -112,15 +114,5 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         paddingLeft: 15,
         paddingRight: 15
-    },
-    input: {
-        marginBottom: 20
-    },
-    button: {
-        marginBottom: 15,
-    },
-    divider: {
-        marginTop: 30,
-        marginBottom: 30
     }
 });

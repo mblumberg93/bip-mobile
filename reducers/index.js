@@ -1,5 +1,4 @@
 import { STANDARD } from '../formations';
-import { makeMove } from '../actions';
 
 export const initialState = {
   name: '',
@@ -16,7 +15,7 @@ function rootReducer(state = initialState, action) {
     return Object.assign({}, state, action.payload);
   }
   if (action.type === 'MAKE_MOVE') {
-    const cups = action.payload.player === state.name ? [...state.cups] : [...state.opponentCups];
+    const cups = action.payload.player === state.name ? copy(state.cups) : copy(state.opponentCups);
     const updatedCups = updateCups(cups, action.payload.row, action.payload.column);
     if (action.payload.player === state.name) {
       return Object.assign({}, state, { cups: updatedCups} );
@@ -28,13 +27,21 @@ function rootReducer(state = initialState, action) {
 }
 
 function updateCups(cups, row, column) {
-  cups = cups.map(cup => {
+  const newCups = cups.map(cup => {
     if (cup.row === row && cup.column === column) {
         cup.active = !cup.active;
     }
     return cup;
   })
-  return cups;
+  return newCups;
+}
+
+function copy(arr) {
+  const newArr = [];
+  for (const item of arr) {
+    newArr.push(Object.assign({}, item));
+  }
+  return newArr;
 }
 
 export default rootReducer;

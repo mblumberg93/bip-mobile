@@ -5,10 +5,16 @@ import YourRack from '../components/YourRack';
 
 export const YourTurnScreen = ({ navigation }) => {
     const pubnub = usePubNub();
+
+    const handleEndTurn = () => {
+        navigation.navigate("Opponents Turn", {});
+    }
     
     return (
         <SafeAreaView>
-            <YourRack pubnub={pubnub}></YourRack>
+            <YourRack pubnub={pubnub}
+                      onEndTurn={handleEndTurn}>
+            </YourRack>
         </SafeAreaView>
     );
 };

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from "react-native";
+import { Button } from 'react-native-elements'
 import { connect } from "react-redux";
 import Square from '../components/Square';
 import { GameEvents } from '../constants';
@@ -50,6 +51,23 @@ class ConnectedYourRack extends Component {
           this.props.pubnub.publish({ channel: this.props.gameChannel, message });
     }
 
+    handleRerack() {
+
+    }
+
+    handleEndTurn() {
+        const message = {
+            content: {
+                event: GameEvents.EndTurn,
+                player: this.props.name
+            },
+            id: Math.random().toString(16).substr(2)
+        };
+        
+        this.props.pubnub.publish({ channel: this.props.gameChannel, message });
+        this.props.onEndTurn();
+    }
+
     render() {
         const size = [...Array(7).keys()];
         const squares = size.map(row => {
@@ -66,11 +84,23 @@ class ConnectedYourRack extends Component {
         });
 
         return (
-            <View style={styles.screenContainer}>
-                <View style={styles.grid}>
-                    {squares}
+            <React.Fragment>
+                <View style={styles.rackContainer}>
+                    <View style={styles.grid}>
+                        {squares}
+                    </View>
                 </View>
-            </View>
+                <View style={styles.buttonContainer}>
+                    <Button title="Rerack" 
+                            buttonStyle={{ marginBottom: 15 }}
+                            onPress={() => this.handleRerack()}>
+                    </Button>
+                    <Button title="End Turn" 
+                            buttonStyle={{ marginBottom: 15 }}
+                            onPress={() => this.handleEndTurn()}>
+                    </Button>
+                </View>
+            </React.Fragment>
         );
     }
 }
@@ -80,13 +110,19 @@ const YourRack = connect(mapStateToProps)(ConnectedYourRack);
 export default YourRack;
 
 const styles = StyleSheet.create({
-    screenContainer: {
+    rackContainer: {
         paddingTop: vw(10),
         paddingBottom: vw(10),
         paddingLeft: 15,
         paddingRight: 15,
         justifyContent: "center",
         alignItems: 'center'
+    },
+    buttonContainer: {
+        paddingTop: 20,
+        paddingLeft: 15,
+        paddingRight: 15,
+        paddingBottom: 20
     },
     grid: {
         width: vw(70),

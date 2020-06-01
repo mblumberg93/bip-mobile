@@ -45,10 +45,10 @@ class App extends Component {
                             options={{ title: 'Choose Start' }} />
               <Stack.Screen name="Your Turn"
                             component={YourTurnScreen} 
-                            options={{ title: 'Your Turn' }} />
+                            options={{ title: 'Your Turn', headerLeft: null }} />
               <Stack.Screen name="Opponents Turn"
                             component={OpponentsTurnScreen} 
-                            options={{ title: "Opponent's Turn" }} />
+                            options={{ title: "Opponent's Turn", headerLeft: null }} />
             </Stack.Navigator>
           </PubNubProvider>
         </NavigationContainer>
