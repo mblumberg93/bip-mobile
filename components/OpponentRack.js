@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { makeMove } from "../actions/index";
+import { rerack } from "../actions/index";
 import Square from '../components/Square';
 import { GameEvents } from '../constants';
 const { vw } = require('react-native-expo-viewport-units');
 
 function mapDispatchToProps(dispatch) {
     return {
-        makeMove: move => dispatch(makeMove(move))
+        makeMove: move => dispatch(makeMove(move)),
+        rerack: rack => dispatch(rerack(rack))
     };
 }
 
@@ -39,6 +41,9 @@ class ConnectedOpponentRack extends Component {
                     }
                     if (envelope.message.content.event === GameEvents.EndTurn) {
                         this.props.onStartTurn();
+                    }
+                    if (envelope.message.content.event === GameEvents.Rerack) {
+                        this.props.rerack({ player: envelope.message.content.player, formation: envelope.message.content.formation });
                     }
                 }
               };

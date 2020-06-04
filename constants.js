@@ -3,5 +3,6 @@ export const GameEvents = {
     CreatorEnteringGame: 1,
     GameStart: 2,
     MakeMove: 3,
-    EndTurn: 4
+    EndTurn: 4,
+    Rerack: 5
 }

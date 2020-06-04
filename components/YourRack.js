@@ -52,7 +52,7 @@ class ConnectedYourRack extends Component {
     }
 
     handleRerack() {
-
+        this.props.onRerack();
     }
 
     handleEndTurn() {

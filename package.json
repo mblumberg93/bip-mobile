@@ -24,6 +24,7 @@
     "react-native-elements": "^2.0.0",
     "react-native-expo-viewport-units": "0.0.8",
     "react-native-gesture-handler": "~1.6.0",
+    "react-native-picker-select": "^7.0.0",
     "react-native-safe-area-context": "^1.0.0",
     "react-native-screens": "^2.7.0",
     "react-native-web": "^0.11.7",

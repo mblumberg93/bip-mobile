@@ -23,6 +23,8 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "Mobile-friendly Beer Pong Tracker for games with friends over the internet",
+    "githubUrl": "https://github.com/mblumberg93/bip-mobile"
   }
 }

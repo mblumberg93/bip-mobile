@@ -1,4 +1,4 @@
-import { STANDARD } from '../formations';
+import { STANDARD, FORMATIONS } from '../formations';
 
 export const initialState = {
   name: '',
@@ -7,7 +7,8 @@ export const initialState = {
   UUID: '',
   code: '',
   cups: STANDARD.cups,
-  opponentCups: STANDARD.cups
+  opponentCups: STANDARD.cups,
+  formation: STANDARD.value
 }
 
 function rootReducer(state = initialState, action) {
@@ -21,6 +22,14 @@ function rootReducer(state = initialState, action) {
       return Object.assign({}, state, { cups: updatedCups} );
     } else {
       return Object.assign({}, state, { opponentCups: updatedCups });
+    }
+  }
+  if (action.type === 'RERACK') {
+    const cups = FORMATIONS.filter(formation => formation.value == action.payload.formation)[0].cups;
+    if (action.payload.player === state.name) {
+      return Object.assign({}, state, { cups: cups} );
+    } else {
+      return Object.assign({}, state, { opponentCups: cups });
     }
   }
   return state;

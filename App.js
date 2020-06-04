@@ -9,6 +9,7 @@ import { CreatorScreen } from './views/CreatorScreen';
 import { StartScreen } from './views/StartScreen';
 import { YourTurnScreen } from './views/YourTurnScreen';
 import { OpponentsTurnScreen } from './views/OpponentsTurnScreen';
+import { RerackScreen } from './views/RerackScreen';
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
@@ -49,6 +50,9 @@ class App extends Component {
               <Stack.Screen name="Opponents Turn"
                             component={OpponentsTurnScreen} 
                             options={{ title: "Opponent's Turn", headerLeft: null }} />
+              <Stack.Screen name="Rerack"
+                            component={RerackScreen} 
+                            options={{ title: "Choose Rack", headerLeft: null }} />
             </Stack.Navigator>
           </PubNubProvider>
         </NavigationContainer>
