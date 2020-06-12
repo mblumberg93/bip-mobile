@@ -13,6 +13,9 @@ function mapStateToProps(state) {
 class ConnectedYourRack extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            gameStateInterval: null
+        }
     }
 
     componentDidMount() {
@@ -20,9 +23,24 @@ class ConnectedYourRack extends Component {
             this.props.pubnub.setUUID(this.props.UUID);
             this.props.pubnub.subscribe({ channels: [this.props.gameChannel] });
         }
+        const gameStateInterval = setInterval(this.sendGameState.bind(this), 10000);
+        this.setState({ gameStateInterval: gameStateInterval });
+    }
+
+    sendGameState() {
+        const message = {
+            content: {
+                event: GameEvents.UpdateGameState,
+                player: this.props.name,
+                cups: this.props.cups
+            },
+            id: Math.random().toString(16).substr(2)
+        };
+        this.props.pubnub.publish({ channel: this.props.gameChannel, message });
     }
 
     componentWillUnmount() {
+        clearInterval(this.state.gameStateInterval);
         if (this.props.pubnub) {
             this.props.pubnub.unsubscribeAll();
         }
@@ -59,7 +77,8 @@ class ConnectedYourRack extends Component {
         const message = {
             content: {
                 event: GameEvents.EndTurn,
-                player: this.props.name
+                player: this.props.name,
+                cups: this.props.cups
             },
             id: Math.random().toString(16).substr(2)
         };

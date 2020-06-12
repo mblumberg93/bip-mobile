@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from "react-native";
 import { connect } from "react-redux";
-import { makeMove } from "../actions/index";
-import { rerack } from "../actions/index";
+import { makeMove, rerack, updateGame } from "../actions/index";
 import Square from '../components/Square';
 import { GameEvents } from '../constants';
 const { vw } = require('react-native-expo-viewport-units');
@@ -10,7 +9,8 @@ const { vw } = require('react-native-expo-viewport-units');
 function mapDispatchToProps(dispatch) {
     return {
         makeMove: move => dispatch(makeMove(move)),
-        rerack: rack => dispatch(rerack(rack))
+        rerack: rack => dispatch(rerack(rack)),
+        updateGame: updates => dispatch(updateGame(updates))
     };
 }
 
@@ -40,15 +40,19 @@ class ConnectedOpponentRack extends Component {
                         this.props.makeMove(move);
                     }
                     if (envelope.message.content.event === GameEvents.EndTurn) {
+                        this.props.updateGame({ opponentCups: envelope.message.content.cups });
                         this.props.onStartTurn();
                     }
                     if (envelope.message.content.event === GameEvents.Rerack) {
                         this.props.rerack({ player: envelope.message.content.player, formation: envelope.message.content.formation });
                     }
+                    if (envelope.message.content.event === GameEvents.UpdateGameState) {
+                        this.props.updateGame({ opponentCups: envelope.message.content.cups });
+                    }
+
                 }
-              };
-        
-              this.props.pubnub.addListener(listener);
+            };
+            this.props.pubnub.addListener(listener);
             this.props.pubnub.subscribe({ channels: [this.props.gameChannel] });
         }
     }
