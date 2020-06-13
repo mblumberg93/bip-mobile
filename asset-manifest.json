@@ -1,7 +1,7 @@
 {
   "files": {
-    "app.js": "/bip-mobile/static/js/app.d64df7f4.chunk.js",
-    "app.js.map": "/bip-mobile/static/js/app.d64df7f4.chunk.js.map",
+    "app.js": "/bip-mobile/static/js/app.45f87468.chunk.js",
+    "app.js.map": "/bip-mobile/static/js/app.45f87468.chunk.js.map",
     "runtime~app.js": "/bip-mobile/static/js/runtime~app.aab2bbc0.js",
     "runtime~app.js.map": "/bip-mobile/static/js/runtime~app.aab2bbc0.js.map",
     "static/js/2.eb253152.chunk.js": "/bip-mobile/static/js/2.eb253152.chunk.js",
@@ -34,6 +34,6 @@
   "entrypoints": [
     "static/js/runtime~app.aab2bbc0.js",
     "static/js/2.eb253152.chunk.js",
-    "static/js/app.d64df7f4.chunk.js"
+    "static/js/app.45f87468.chunk.js"
   ]
 }
