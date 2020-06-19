@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import PubNub from "pubnub";
-import { PubNubProvider } from "pubnub-react";
-import { PUBNUB_PUBLISH_KEY, PUBNUB_SUBSCRIBE_KEY } from './secrets';
 import { WelcomeScreen } from './views/WelcomeScreen';
 import { CreatorScreen } from './views/CreatorScreen';
 import { StartScreen } from './views/StartScreen';
@@ -19,10 +16,6 @@ import rootReducer from './reducers'
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
 const Stack = createStackNavigator();
-const pubnub = new PubNub({
-  subscribeKey: PUBNUB_SUBSCRIBE_KEY,
-  publishKey: PUBNUB_PUBLISH_KEY
-});
 
 class App extends Component {
   constructor(props) {  
@@ -33,28 +26,26 @@ class App extends Component {
     return (
       <Provider store={store}>
         <NavigationContainer>
-          <PubNubProvider client={pubnub}>
-            <Stack.Navigator initialRouteName="Welcome">
-              <Stack.Screen name="Welcome" 
-                            component={WelcomeScreen} 
-                            options={{ title: 'Welcome To BIP' }} />
-              <Stack.Screen name="Creator" 
-                            component={CreatorScreen} 
-                            options={{ title: 'Game Code' }} />
-              <Stack.Screen name="Start"
-                            component={StartScreen} 
-                            options={{ title: 'Choose Start' }} />
-              <Stack.Screen name="Your Turn"
-                            component={YourTurnScreen} 
-                            options={{ title: 'Your Turn', headerLeft: null }} />
-              <Stack.Screen name="Opponents Turn"
-                            component={OpponentsTurnScreen} 
-                            options={{ title: "Opponent's Turn", headerLeft: null }} />
-              <Stack.Screen name="Rerack"
-                            component={RerackScreen} 
-                            options={{ title: "Choose Rack", headerLeft: null }} />
-            </Stack.Navigator>
-          </PubNubProvider>
+          <Stack.Navigator initialRouteName="Welcome">
+            <Stack.Screen name="Welcome" 
+                          component={WelcomeScreen} 
+                          options={{ title: 'Welcome To BIP' }} />
+            <Stack.Screen name="Creator" 
+                          component={CreatorScreen} 
+                          options={{ title: 'Game Code' }} />
+            <Stack.Screen name="Start"
+                          component={StartScreen} 
+                          options={{ title: 'Choose Start' }} />
+            <Stack.Screen name="Your Turn"
+                          component={YourTurnScreen} 
+                          options={{ title: 'Your Turn', headerLeft: null }} />
+            <Stack.Screen name="Opponents Turn"
+                          component={OpponentsTurnScreen} 
+                          options={{ title: "Opponent's Turn", headerLeft: null }} />
+            <Stack.Screen name="Rerack"
+                          component={RerackScreen} 
+                          options={{ title: "Choose Rack", headerLeft: null }} />
+          </Stack.Navigator>
         </NavigationContainer>
       </Provider>
     );

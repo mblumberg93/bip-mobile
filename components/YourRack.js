@@ -4,6 +4,7 @@ import { Button } from 'react-native-elements'
 import { connect } from "react-redux";
 import Square from '../components/Square';
 import { GameEvents } from '../constants';
+import { firebaseDB } from '../services/firebase';
 const { vw } = require('react-native-expo-viewport-units');
 
 function mapStateToProps(state) {
@@ -13,37 +14,6 @@ function mapStateToProps(state) {
 class ConnectedYourRack extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            gameStateInterval: null
-        }
-    }
-
-    componentDidMount() {
-        if (this.props.pubnub) {
-            this.props.pubnub.setUUID(this.props.UUID);
-            this.props.pubnub.subscribe({ channels: [this.props.gameChannel] });
-        }
-        const gameStateInterval = setInterval(this.sendGameState.bind(this), 10000);
-        this.setState({ gameStateInterval: gameStateInterval });
-    }
-
-    sendGameState() {
-        const message = {
-            content: {
-                event: GameEvents.UpdateGameState,
-                player: this.props.name,
-                cups: this.props.cups
-            },
-            id: Math.random().toString(16).substr(2)
-        };
-        this.props.pubnub.publish({ channel: this.props.gameChannel, message });
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.state.gameStateInterval);
-        if (this.props.pubnub) {
-            this.props.pubnub.unsubscribeAll();
-        }
     }
 
     getCup(row, column) {
@@ -56,17 +26,14 @@ class ConnectedYourRack extends Component {
     }
 
     handleUpdateCups(row, column) {
-        const message = {
-            content: {
-                event: GameEvents.MakeMove,
-                player: this.props.name,
-                row: row,
-                column: column
-            },
-            id: Math.random().toString(16).substr(2)
-          };
-        
-          this.props.pubnub.publish({ channel: this.props.gameChannel, message });
+        const msg = {
+            event: GameEvents.MakeMove,
+            player: this.props.name,
+            row: row,
+            column: column,
+            timestamp: Date.now()
+        }
+        firebaseDB.ref(this.props.gameDB).push(msg);
     }
 
     handleRerack() {
@@ -74,16 +41,13 @@ class ConnectedYourRack extends Component {
     }
 
     handleEndTurn() {
-        const message = {
-            content: {
-                event: GameEvents.EndTurn,
-                player: this.props.name,
-                cups: this.props.cups
-            },
-            id: Math.random().toString(16).substr(2)
-        };
-        
-        this.props.pubnub.publish({ channel: this.props.gameChannel, message });
+        const msg = {
+            event: GameEvents.EndTurn,
+            player: this.props.name,
+            cups: this.props.cups,
+            timestamp: Date.now()
+        }
+        firebaseDB.ref(this.props.gameDB).push(msg);
         this.props.onEndTurn();
     }
 

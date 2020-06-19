@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { makeMove, rerack, updateGame } from "../actions/index";
 import Square from '../components/Square';
 import { GameEvents } from '../constants';
+import { firebaseDB } from '../services/firebase';
 const { vw } = require('react-native-expo-viewport-units');
 
 function mapDispatchToProps(dispatch) {
@@ -24,43 +25,30 @@ class ConnectedOpponentRack extends Component {
     }
 
     componentDidMount() {
-        if (this.props.pubnub) {
-            this.props.pubnub.setUUID(this.props.UUID);
-            const listener = {
-                message: envelope => {
-                    if (envelope.message.content.player === this.props.name) {
-                        return;
-                    }
-                    if (envelope.message.content.event === GameEvents.MakeMove) {
-                        const move = { 
-                            player: envelope.message.content.player, 
-                            row: envelope.message.content.row, 
-                            column: envelope.message.content.column
-                        }
-                        this.props.makeMove(move);
-                    }
-                    if (envelope.message.content.event === GameEvents.EndTurn) {
-                        this.props.updateGame({ opponentCups: envelope.message.content.cups });
-                        this.props.onStartTurn();
-                    }
-                    if (envelope.message.content.event === GameEvents.Rerack) {
-                        this.props.rerack({ player: envelope.message.content.player, formation: envelope.message.content.formation });
-                    }
-                    if (envelope.message.content.event === GameEvents.UpdateGameState) {
-                        this.props.updateGame({ opponentCups: envelope.message.content.cups });
-                    }
+        firebaseDB.ref(this.props.gameDB).limitToLast(1).on("child_added", msg => {
+            const message = msg.val();
+            if (message.player === this.props.name) {
+                return;
+            }
 
+            switch(message.event) {
+                case GameEvents.MakeMove:
+                    const move = { 
+                        player: message.player, 
+                        row: message.row, 
+                        column: message.column
+                    }
+                    this.props.makeMove(move);
+                    break;
+                case GameEvents.EndTurn:
+                    this.props.updateGame({ opponentCups: message.cups });
+                    this.props.onStartTurn();
+                  break;
+                case GameEvents.Rerack:
+                    this.props.rerack({ player: message.player, formation: message.formation });
+                  break;
                 }
-            };
-            this.props.pubnub.addListener(listener);
-            this.props.pubnub.subscribe({ channels: [this.props.gameChannel] });
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.props.pubnub) {
-            this.props.pubnub.unsubscribeAll();
-        }
+        });
     }
 
     getCup(row, column) {

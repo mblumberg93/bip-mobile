@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Clipboard } from "react-nativ
 import { GameEvents } from '../constants';
 import { connect } from "react-redux";
 import { updateGame } from "../actions/index";
+import { firebaseDB } from '../services/firebase';
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -20,36 +21,22 @@ class ConnectedCodeDisplay extends Component {
     }
 
     componentDidMount() {
-        if (this.props.pubnub) {
-            this.props.pubnub.setUUID(this.props.UUID);
-      
-            const listener = {
-              message: envelope => {
-                if (envelope.message.content.event == GameEvents.JoinerEnteringGame) {
-                  const message = {
-                    content: {
-                        event: GameEvents.CreatorEnteringGame,
-                        name: this.props.name
-                    },
-                    id: Math.random().toString(16).substr(2)
-                  };
-                  
-                  this.props.pubnub.publish({ channel: this.props.gameChannel, message });
-                  this.props.updateGame({opponentName: envelope.message.content.name});
-                  this.props.goToStart();
+        firebaseDB.ref(this.props.gameDB).limitToLast(1).on("child_added", msg => {
+            const message = msg.val();
+            if (message.player === this.props.name) {
+                return;
+            }
+            if (message.event == GameEvents.JoinerEnteringGame) {
+                const newMsg = {
+                    event: GameEvents.CreatorEnteringGame,
+                    player: this.props.name,
+                    timestamp: Date.now()
                 }
-              }
-            };
-      
-            this.props.pubnub.addListener(listener);
-            this.props.pubnub.subscribe({ channels: [this.props.gameChannel] });
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.props.pubnub) {
-            this.props.pubnub.unsubscribeAll();
-        }
+                firebaseDB.ref(this.props.gameDB).push(newMsg);
+                this.props.updateGame({opponentName: message.player});
+                this.props.goToStart();
+            }
+        });
     }
 
     render() {
