@@ -4,6 +4,7 @@ import { Button } from 'react-native-elements';
 import { connect } from "react-redux";
 import { updateGame } from "../actions/index";
 import { GameEvents } from '../constants';
+import { firebaseDB } from '../services/firebase';
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -24,70 +25,59 @@ class ConnectedChooseStart extends Component {
     }
 
     componentDidMount() {
-        if (this.props.pubnub) {
-            this.props.pubnub.setUUID(this.props.UUID);
-    
-            const listener = {
-                message: envelope => {
-                    if (envelope.message.content.event == GameEvents.CreatorEnteringGame && this.props.isJoiner) {
-                        this.props.updateGame({opponentName: envelope.message.content.name});
-                        this.setState({ displayStartOptions: true });
-                    }
-                    if (envelope.message.content.event == GameEvents.GameStart) {
-                        if (envelope.message.content.player == this.props.name) {
-                            this.props.onYouStart();
-                        } else {
-
-                            this.props.onOpponentStart();
-                        }             
-                    }
-                }
-            };
-      
-            this.props.pubnub.addListener(listener);
-            this.props.pubnub.subscribe({ channels: [this.props.gameChannel] });
-
-            if (this.props.isJoiner) {
-                const message = {
-                    content: {
-                        event: GameEvents.JoinerEnteringGame,
-                        name: this.props.name
-                    },
-                    id: Math.random().toString(16).substr(2)
-                };
-                this.props.pubnub.publish({ channel: this.props.gameChannel, message });
+        firebaseDB.ref(this.props.gameDB).limitToLast(1).on("child_added", msg => {
+            const message = msg.val();
+            if (message.player === this.props.name) {
+                return;
             }
-        }
-    }
 
-    componentWillUnmount() {
-        if (this.props.pubnub) {
-            this.props.pubnub.unsubscribeAll();
+            switch(message.event) {
+                case GameEvents.CreatorEnteringGame:
+                    if (this.props.isJoiner) {
+                        this.props.updateGame({opponentName: message.player });
+                        this.setState({ displayStartOptions: true });
+                    }  
+                    break;
+                case GameEvents.GameStart:
+                    if (message.starter == this.props.name) {
+                        this.props.onYouStart();
+                    } else {
+                        this.props.onOpponentStart();
+                    }
+                  break;
+                }
+        });
+
+        if (this.props.isJoiner) {
+            const msg = {
+                event: GameEvents.JoinerEnteringGame,
+                player: this.props.name,
+                timestamp: Date.now()
+            }
+            firebaseDB.ref(this.props.gameDB).push(msg);
         }
     }
 
     handleYouStart() {
         this.props.onYouStart();
-        const message = {
-            content: {
-                event: GameEvents.GameStart,
-                player: this.props.name
-            },
-            id: Math.random().toString(16).substr(2)
-        };
-        this.props.pubnub.publish({ channel: this.props.gameChannel, message });
+        const msg = {
+            event: GameEvents.GameStart,
+            player: this.props.name,
+            starter: this.props.name,
+            timestamp: Date.now()
+        }
+        firebaseDB.ref(this.props.gameDB).push(msg);
     }
 
     handleOpponentStart() {
         this.props.onOpponentStart();
-        const message = {
-            content: {
-                event: GameEvents.GameStart,
-                player: this.props.opponentName
-            },
-            id: Math.random().toString(16).substr(2)
-        };
-        this.props.pubnub.publish({ channel: this.props.gameChannel, message });
+        const msg = {
+            event: GameEvents.GameStart,
+            player: this.props.name,
+            starter: this.props.opponentName,
+            timestamp: Date.now()
+        }
+        firebaseDB.ref(this.props.gameDB).push(msg);
     }
 
     render() {

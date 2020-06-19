@@ -5,5 +5,7 @@ export const GameEvents = {
     MakeMove: 3,
     EndTurn: 4,
     Rerack: 5,
-    UpdateGameState: 6
+    UpdateGameState: 6,
+    CreateGame: 7,
+    JoinGame: 8
 }

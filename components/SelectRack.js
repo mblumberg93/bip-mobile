@@ -6,6 +6,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { GameEvents } from '../constants';
 import { FORMATIONS }from '../formations';
 import { rerack } from "../actions/index";
+import { firebaseDB } from '../services/firebase';
 const { vw } = require('react-native-expo-viewport-units');
 
 function mapDispatchToProps(dispatch) {
@@ -26,30 +27,14 @@ class ConnectedSelectRack extends Component {
         }
     }
 
-    componentDidMount() {
-        if (this.props.pubnub) {
-            this.props.pubnub.setUUID(this.props.UUID);
-            this.props.pubnub.subscribe({ channels: [this.props.gameChannel] });
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.props.pubnub) {
-            this.props.pubnub.unsubscribeAll();
-        }
-    }
-
     handleChooseRack() {
-        const message = {
-            content: {
-                event: GameEvents.Rerack,
-                player: this.props.name,
-                formation: this.state.formation
-            },
-            id: Math.random().toString(16).substr(2)
-        };
-        
-        this.props.pubnub.publish({ channel: this.props.gameChannel, message });
+        const msg = {
+            event: GameEvents.Rerack,
+            player: this.props.name,
+            formation: this.state.formation,
+            timestamp: Date.now()
+        }
+        firebaseDB.ref(this.props.gameDB).push(msg);
         this.props.rerack({ player: this.props.name, formation: this.state.formation });
         this.props.onChooseRack();
     }
@@ -68,7 +53,7 @@ class ConnectedSelectRack extends Component {
 
         const placeholder = {
             label: "Select a Rack...",
-            value: null,
+            value: '',
             color: 'grey'
           };
 
@@ -110,25 +95,21 @@ const styles = StyleSheet.create({
 
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
-      fontSize: 16,
       paddingVertical: 12,
       paddingHorizontal: 10,
       borderWidth: 1,
       borderColor: 'gray',
       borderRadius: 4,
       color: 'black',
-      paddingRight: 30,
-      fontWeight: 'bold'
+      paddingRight: 30
     },
     inputAndroid: {
-      fontSize: 16,
       paddingHorizontal: 10,
       paddingVertical: 8,
       borderWidth: 0.5,
       borderColor: 'purple',
       borderRadius: 8,
       color: 'black',
-      paddingRight: 30,
-      fontWeight: 'bold'
+      paddingRight: 30
     },
   });

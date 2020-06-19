@@ -8,7 +8,8 @@ export const initialState = {
   code: '',
   cups: STANDARD.cups,
   opponentCups: STANDARD.cups,
-  formation: STANDARD.value
+  formation: STANDARD.value,
+  gameDB: ''
 }
 
 function rootReducer(state = initialState, action) {

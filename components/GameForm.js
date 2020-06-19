@@ -3,6 +3,8 @@ import { Input, Button, Divider } from 'react-native-elements'
 import { View, StyleSheet, Text } from "react-native";
 import { connect } from "react-redux";
 import { updateGame } from "../actions/index";
+import { firebaseDB } from '../services/firebase';
+import { GameEvents } from '../constants';
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -18,7 +20,7 @@ class ConnectedGameForm extends Component {
             code: '',
             nameError: false,
             codeError: false
-         }
+        }
     }
 
     handleNameChange(e) {
@@ -34,7 +36,14 @@ class ConnectedGameForm extends Component {
             const code = this.generateCode();
             const gameChannel = "game-" + code;
             const UUID = this.state.name + "-" + gameChannel;
-            this.props.updateGame({ name: this.state.name, code: code, gameChannel: gameChannel, UUID: UUID });
+            const gameDB = "games/game-" + code;
+            this.props.updateGame({ name: this.state.name, code: code, gameChannel: gameChannel, UUID: UUID, gameDB: gameDB });
+            const msg = {
+                event: GameEvents.CreateGame,
+                player: this.state.name,
+                timestamp: Date.now()
+            };
+            firebaseDB.ref(gameDB).push(msg);
             this.props.onCreate(this.state.name);
         } else {
             this.setState({ nameError: true });
@@ -45,7 +54,14 @@ class ConnectedGameForm extends Component {
         if (this.state.name && this.state.code) {
             const gameChannel = "game-" + this.state.code;
             const UUID = this.state.name + "-" + gameChannel;
-            this.props.updateGame({ name: this.state.name, code: this.state.code, gameChannel: gameChannel, UUID: UUID });
+            const gameDB = "games/game-" + this.state.code;
+            this.props.updateGame({ name: this.state.name, code: this.state.code, gameChannel: gameChannel, UUID: UUID, gameDB: gameDB });
+            const msg = {
+                event: GameEvents.JoinGame,
+                player: this.state.name,
+                timestamp: Date.now()
+            }
+            firebaseDB.ref(gameDB).push(msg);
             this.props.onJoin(this.state.name, gameChannel);
         } else if (this.state.name && !this.state.code) {
             this.setState({ codeError: true });
