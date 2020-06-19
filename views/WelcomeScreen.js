@@ -3,11 +3,11 @@ import { SafeAreaView } from "react-native";
 import GameForm from '../components/GameForm';
 
 export const WelcomeScreen = ({ navigation }) => {
-    const handleCreate = (name) => {
+    const handleCreate = () => {
         navigation.navigate("Creator", {});
     }
 
-    const handleJoin = (name, gameChannel) => {
+    const handleJoin = () => {
         navigation.navigate("Start", { isJoiner: true });
     }
 

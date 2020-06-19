@@ -10,11 +10,16 @@ export const YourTurnScreen = ({ navigation }) => {
     const handleEndTurn = () => {
         navigation.navigate("Opponents Turn", {});
     }
+
+    const handleQuit = () => {
+        navigation.navigate("Welcome", {});
+    }
     
     return (
         <SafeAreaView>
             <YourRack onRerack={handleRerack}
-                      onEndTurn={handleEndTurn}>
+                      onEndTurn={handleEndTurn}
+                      onQuit={handleQuit}>
             </YourRack>
         </SafeAreaView>
     );

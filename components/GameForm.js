@@ -34,17 +34,15 @@ class ConnectedGameForm extends Component {
     handleCreate() {
         if (this.state.name) {
             const code = this.generateCode();
-            const gameChannel = "game-" + code;
-            const UUID = this.state.name + "-" + gameChannel;
             const gameDB = "games/game-" + code;
-            this.props.updateGame({ name: this.state.name, code: code, gameChannel: gameChannel, UUID: UUID, gameDB: gameDB });
+            this.props.updateGame({ name: this.state.name, code: code, gameDB: gameDB });
             const msg = {
                 event: GameEvents.CreateGame,
                 player: this.state.name,
                 timestamp: Date.now()
             };
             firebaseDB.ref(gameDB).push(msg);
-            this.props.onCreate(this.state.name);
+            this.props.onCreate();
         } else {
             this.setState({ nameError: true });
         }
@@ -52,17 +50,9 @@ class ConnectedGameForm extends Component {
 
     handleJoin() {
         if (this.state.name && this.state.code) {
-            const gameChannel = "game-" + this.state.code;
-            const UUID = this.state.name + "-" + gameChannel;
             const gameDB = "games/game-" + this.state.code;
-            this.props.updateGame({ name: this.state.name, code: this.state.code, gameChannel: gameChannel, UUID: UUID, gameDB: gameDB });
-            const msg = {
-                event: GameEvents.JoinGame,
-                player: this.state.name,
-                timestamp: Date.now()
-            }
-            firebaseDB.ref(gameDB).push(msg);
-            this.props.onJoin(this.state.name, gameChannel);
+            this.props.updateGame({ name: this.state.name, code: this.state.code, gameDB: gameDB });
+            this.props.onJoin();
         } else if (this.state.name && !this.state.code) {
             this.setState({ codeError: true });
         } else if (!this.state.name && this.state.code) {

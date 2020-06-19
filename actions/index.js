@@ -9,3 +9,11 @@ export function makeMove(payload) {
 export function rerack(payload) {
   return { type: 'RERACK', payload };
 }
+
+export function reset(payload) {
+  return { type: 'RESET', payload };
+}
+
+export function quit(payload) {
+  return { type: 'QUIT', payload };
+}

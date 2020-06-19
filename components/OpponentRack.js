@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from "react-native";
 import { connect } from "react-redux";
-import { makeMove, rerack, updateGame } from "../actions/index";
+import { makeMove, rerack, updateGame, reset, quit } from "../actions/index";
 import Square from '../components/Square';
 import { GameEvents } from '../constants';
 import { firebaseDB } from '../services/firebase';
@@ -11,7 +11,9 @@ function mapDispatchToProps(dispatch) {
     return {
         makeMove: move => dispatch(makeMove(move)),
         rerack: rack => dispatch(rerack(rack)),
-        updateGame: updates => dispatch(updateGame(updates))
+        updateGame: updates => dispatch(updateGame(updates)),
+        reset: _ => dispatch(reset(_)),
+        quit: _ => dispatch(quit(_))
     };
 }
 
@@ -46,6 +48,13 @@ class ConnectedOpponentRack extends Component {
                   break;
                 case GameEvents.Rerack:
                     this.props.rerack({ player: message.player, formation: message.formation });
+                  break;
+                case GameEvents.Reset:
+                    this.props.reset({});
+                  break;
+                case GameEvents.Quit:
+                    this.props.quit({});
+                    this.props.onQuit();
                   break;
                 }
         });

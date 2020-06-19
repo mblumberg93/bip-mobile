@@ -3,8 +3,6 @@ import { STANDARD, FORMATIONS } from '../formations';
 export const initialState = {
   name: '',
   opponentName: '',
-  gameChannel: '',
-  UUID: '',
   code: '',
   cups: STANDARD.cups,
   opponentCups: STANDARD.cups,
@@ -32,6 +30,13 @@ function rootReducer(state = initialState, action) {
     } else {
       return Object.assign({}, state, { opponentCups: cups });
     }
+  }
+  if (action.type === 'RESET') {
+    const resetValues = { cups: STANDARD.cups, opponentCups: STANDARD.cups, formation: STANDARD.value }
+    return Object.assign({}, state, resetValues);
+  }
+  if (action.type === 'QUIT') {
+    return Object.assign({}, state, initialState);
   }
   return state;
 }

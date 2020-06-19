@@ -7,5 +7,6 @@ export const GameEvents = {
     Rerack: 5,
     UpdateGameState: 6,
     CreateGame: 7,
-    JoinGame: 8
+    Reset: 8,
+    Quit: 9
 }
