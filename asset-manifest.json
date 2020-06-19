@@ -1,17 +1,18 @@
 {
   "files": {
-    "app.js": "/bip-mobile/static/js/app.45f87468.chunk.js",
-    "app.js.map": "/bip-mobile/static/js/app.45f87468.chunk.js.map",
+    "app.js": "/bip-mobile/static/js/app.0151be86.chunk.js",
+    "app.js.map": "/bip-mobile/static/js/app.0151be86.chunk.js.map",
     "runtime~app.js": "/bip-mobile/static/js/runtime~app.aab2bbc0.js",
     "runtime~app.js.map": "/bip-mobile/static/js/runtime~app.aab2bbc0.js.map",
-    "static/js/2.eb253152.chunk.js": "/bip-mobile/static/js/2.eb253152.chunk.js",
-    "static/js/2.eb253152.chunk.js.map": "/bip-mobile/static/js/2.eb253152.chunk.js.map",
+    "static/js/2.441c4b89.chunk.js": "/bip-mobile/static/js/2.441c4b89.chunk.js",
+    "static/js/2.441c4b89.chunk.js.map": "/bip-mobile/static/js/2.441c4b89.chunk.js.map",
     "fonts/AntDesign.ttf": "/bip-mobile/./fonts/AntDesign.ttf",
     "fonts/Entypo.ttf": "/bip-mobile/./fonts/Entypo.ttf",
     "fonts/Feather.ttf": "/bip-mobile/./fonts/Feather.ttf",
     "fonts/FontAwesome.ttf": "/bip-mobile/./fonts/FontAwesome.ttf",
     "fonts/FontAwesome5_Brands.ttf": "/bip-mobile/./fonts/FontAwesome5_Brands.ttf",
     "fonts/FontAwesome5_Solid.ttf": "/bip-mobile/./fonts/FontAwesome5_Solid.ttf",
+    "fonts/Fontisto.ttf": "/bip-mobile/./fonts/Fontisto.ttf",
     "fonts/Foundation.ttf": "/bip-mobile/./fonts/Foundation.ttf",
     "fonts/Ionicons.ttf": "/bip-mobile/./fonts/Ionicons.ttf",
     "fonts/MaterialCommunityIcons.ttf": "/bip-mobile/./fonts/MaterialCommunityIcons.ttf",
@@ -33,7 +34,7 @@
   },
   "entrypoints": [
     "static/js/runtime~app.aab2bbc0.js",
-    "static/js/2.eb253152.chunk.js",
-    "static/js/app.45f87468.chunk.js"
+    "static/js/2.441c4b89.chunk.js",
+    "static/js/app.0151be86.chunk.js"
   ]
 }
